@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
         });
 
         console.log("User created successfully:", newUser);
-        return res.render("login", { errorMessage: "Invalid email or password!" });
+        return res.redirect("/api/login",);
     } catch (error) {
         console.error("Error creating user:", error);
         res.status(500).send({ message: "Something went wrong", error });
