@@ -1,0 +1,34 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Build output
+/dist
+/build
+
+# Editor and system files
+.DS_Store
+Thumbs.db
+.vscode/
+*.code-workspace
+
+# Temporary files
+*.tmp
+*.temp
+
+# Compiled files
+*.js.map
+*.d.ts
+
+# Secrets
+*.pem
+*.key
