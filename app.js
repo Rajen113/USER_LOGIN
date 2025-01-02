@@ -10,7 +10,8 @@ const jwt=require("jsonwebtoken")
 var cors = require('cors')
 
 dbConnect()
-var cors = require('cors')
+app.use(cors());
+
 app.use(express.json())
 app.use(cookie())
 app.use(express.urlencoded({ extended: true }));
