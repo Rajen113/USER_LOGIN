@@ -190,9 +190,14 @@
                 <a href="#about">About</a>
                 <a href="#contact">Contact</a>
             </div>
+            <h1>Welcome, <%= user ? user.name : 'Guest' %>!</h1> 
             <div>
-                <button class="nav-button"><a href="/api/signup">Signup</a></button>
-                <button class="nav-button"><a href="/api/login">Login</a></button>
+                <% if (user=='Guest') { %>
+                    <button class="nav-button"><a href="/api/signup">Signup</a></button>
+                    <button class="nav-button"><a href="/api/login">Login</a></button>
+                    <% } else { %>
+                        <button class="nav-button"><a href="/api/Logout">Logout</a></button>
+                  <% } %>
             </div>
         </div>
     </nav>

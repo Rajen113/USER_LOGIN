@@ -1,5 +1,7 @@
-const userModel=require("../models/user.model")
-const bcrypt=require('bcrypt')
+const userModel = require("../models/user.model")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const cookie=require("cookie-parser")
 
 const findUsers = async (req, res) => {
     try {
@@ -39,39 +41,46 @@ const createUser = async (req, res) => {
     }
 };
 
-const signUp=(req, res) => {
+const signUp = (req, res) => {
     res.render("signup", { errorMessage: null });
 }
 
 
-const logIn=async (req, res) => {
-        const { email, password } = req.body;
-    
-        // Basic validation
-        if (!email || !password) {
-            return res.render("login", { errorMessage: "Email and password are required!" });
-        }
-    
-        try {
-            // Implement your authentication logic here
-            // Example: Check if the email and password match the database records
-            const user = await userModel.findOne({ email }); // Replace with your database logic
-            if (!user) {
-                return res.render("login", { errorMessage: "Invalid email or password!" });
-            }
-    
-            // Compare passwords (if hashed, use bcrypt.compare)
-            const isMatch = bcrypt.compare(password,user.password,(err,result)=>{
-                console.log(result)
-                if (!result) {
-                    return res.render("login", { errorMessage: "Invalid email or password!" });
-                }
-                res.send("Login successful!"); // Replace with your desired response
-            })
-        } catch (error) {
-            console.error("Login error:", error);
-            res.render("login", { errorMessage: "Something went wrong, please try again." });
-        }
-    };
+const logIn = async (req, res) => {
+    const { email, password } = req.body;
 
-module.exports = [findUsers,createUser,signUp,logIn]
+    // Basic validation
+    if (!email || !password) {
+        return res.render("login", { errorMessage: "Email and password are required!" });
+    }
+
+    try {
+        // Implement your authentication logic here
+        // Example: Check if the email and password match the database records
+        const user = await userModel.findOne({ email }); // Replace with your database logic
+          if (!user) {
+              return res.render("login", { errorMessage: "Invalid email or password!" });
+          }
+
+        // Compare passwords (if hashed, use bcrypt.compare)
+          const isMatch = bcrypt.compare(password, user.password, (err, result) => {
+              console.log(result)
+              if (!result) {
+                  return res.render("login", { errorMessage: "Invalid email or password!" });
+              }
+              const token = jwt.sign({ name: user.name }, 'secret', { expiresIn: "1h" });
+              res.cookie("token",token)
+              res.redirect("/"); // Replace with your desired response
+          })
+    } catch (error) {
+        console.error("Login error:", error);
+        res.render("login", { errorMessage: "Something went wrong, please try again." });
+    }
+};
+
+const logOut=(req,res)=>{
+    res.clearCookie("token");
+    res.render("home")
+}
+
+module.exports = [findUsers, createUser, signUp, logIn,logOut]

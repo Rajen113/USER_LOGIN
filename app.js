@@ -4,9 +4,13 @@ const path = require("path");
 const dbConnect=require("./db/db")
 const userModel=require("./models/user.model")
 const users=require('./router/users')
+const cookie=require("cookie-parser");
+const { console } = require("inspector");
+const jwt=require("jsonwebtoken")
 
 dbConnect()
 app.use(express.json())
+app.use(cookie())
 app.use(express.urlencoded({ extended: true }));
 app.use("/api",users)
 
@@ -14,9 +18,20 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.get("/",(req,res)=>{
-  console.log("done")
-  res.render("home")
+  const token = req.cookies.token;
+  console.log(token)
+    if (!token) return res.render("home",{user:'Guest'});
+  
+    try {
+      const user = jwt.verify(token, "secret");
+      const name = user.name;
+      res.render("home",{user})
+    } catch (err) {
+      res.res.render("home",{name});
+    }
 })
+
+
 
 
 
