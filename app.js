@@ -7,8 +7,10 @@ const users=require('./router/users')
 const cookie=require("cookie-parser");
 const { console } = require("inspector");
 const jwt=require("jsonwebtoken")
+var cors = require('cors')
 
 dbConnect()
+var cors = require('cors')
 app.use(express.json())
 app.use(cookie())
 app.use(express.urlencoded({ extended: true }));
